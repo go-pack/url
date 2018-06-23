@@ -68,7 +68,7 @@ func (b *Builder) ToString() string {
 	if i {
 		b.scheme = "http://"
 	} else {
-		b.scheme += "//"
+		b.scheme += "://"
 	}
 	url = append(url, b.scheme)
 
@@ -78,14 +78,15 @@ func (b *Builder) ToString() string {
 	}
 	url = append(url, b.host)
 
-	p := len(b.path) > 0
-	if p {
-		url = append(url, b.path)
-	}
 
 	pt := len(b.port) > 0
 	if pt {
-		url = append(url, b.port)
+		url = append(url, ":" + b.port)
+	}
+
+	p := len(b.path) > 0
+	if p {
+		url = append(url, b.path)
 	}
 
 	var queryString string
