@@ -6,12 +6,12 @@ import (
 )
 
 type Builder struct {
-	scheme string
-	port   string
-	host   string
-	path   string
+	scheme   string
+	port     string
+	host     string
+	path     string
 	fragment string
-	query url2.Values
+	query    url2.Values
 }
 
 func (b *Builder) Scheme(scheme string) *Builder {
@@ -31,10 +31,18 @@ func (b *Builder) Query(query map[string][]string) *Builder {
 	return b
 }
 func (b *Builder) AddQuery(query map[string][]string) *Builder {
-	for k,v  := range query  {
+	for k, v := range query {
 		b.query[k] = v
 	}
 	return b
+}
+func (b *Builder) PathVariable(pathVariable map[string]string) *Builder {
+
+	for k, v := range pathVariable {
+		b.path = strings.Replace(b.path, k, v, 1)
+	}
+	return b
+
 }
 func (b *Builder) Fragment(fragment string) *Builder {
 	b.fragment = fragment
@@ -46,7 +54,7 @@ func (b *Builder) Init(url string) bool {
 	urlInfo, err := url2.ParseRequestURI(url)
 	if err != nil {
 		return false
-	}else{
+	} else {
 		b.scheme = urlInfo.Scheme
 		b.port = urlInfo.Port()
 		b.path = urlInfo.Path
@@ -59,7 +67,7 @@ func (b *Builder) ToString() string {
 	i := len(b.scheme) <= 0
 	if i {
 		b.scheme = "http://"
-	}else{
+	} else {
 		b.scheme += "//"
 	}
 	url = append(url, b.scheme)
@@ -75,7 +83,6 @@ func (b *Builder) ToString() string {
 		url = append(url, b.path)
 	}
 
-
 	pt := len(b.port) > 0
 	if pt {
 		url = append(url, b.port)
@@ -88,12 +95,11 @@ func (b *Builder) ToString() string {
 
 	url = append(url, queryString)
 
-
 	pf := len(b.fragment) > 0
 	if pf {
-		url = append(url,"#" + b.fragment)
+		url = append(url, "#"+b.fragment)
 	}
-	return strings.Join(url,"")
+	return strings.Join(url, "")
 }
 
 func NewBuilder() *Builder {

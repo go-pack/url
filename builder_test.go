@@ -20,5 +20,18 @@ func TestBuilder_Init(t *testing.T) {
 	mx["ccid"] = []string{"123456","777"}
 	path := urlBuilder.AddQuery(mx).ToString()
 	fmt.Printf("%s",path)
+}
+func TestBuilder_PathVariable(t *testing.T) {
+	urlBuilder := NewBuilder()
+	urlBuilder.Init("http://127.0.0.1/vhot/:cd/:udid/api?uuid=123456&uuid=777")
 
+	mx := make(map[string][]string)
+	mx["ccid"] = []string{"123456","777"}
+
+	pathV := make(map[string]string)
+	pathV[":udid"] = "123"
+	pathV[":cd"] = "123"
+
+	path := urlBuilder.AddQuery(mx).PathVariable(pathV).ToString()
+	fmt.Printf("%s",path)
 }
